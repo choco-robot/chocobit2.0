@@ -1,5 +1,6 @@
-# 巧客智能车
- - 2018/10/30
+# 巧客探索者
+ - 2018/11/13
+ - 适用于新版探索者智能车
 Extension for Choco mbit    
  ## License
  MIT

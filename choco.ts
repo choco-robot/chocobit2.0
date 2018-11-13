@@ -1,5 +1,5 @@
-﻿//chocobit 2018/11/1
-/** v1.1.2 */
+//自定义扩展库模板
+//chocobit 2018/8/17
 //% color="#f97c04" weight=25 icon="\uf1b9"
 namespace ChocoCar {
 
@@ -24,7 +24,6 @@ namespace ChocoCar {
 
     let initialized = false
     let turn_off = false
-    
     export enum enServo {
         //blockId=servo_s1 block="接口1"
         S1 = 1,
@@ -139,23 +138,23 @@ namespace ChocoCar {
         rightspeed =rightspeed*256/100*16
         if (rightspeed >= 0)
         {
-            setPwm(1, rightspeed-1)   //智能车右轮为1，0通道
-            setPwm(0, 0)            //编程盒右电机为7，6通道
+            setPwm(0, rightspeed-1)   //智能车右轮为1，0通道
+            setPwm(1, 0)            
         }
         else
         {
-            setPwm(1, 0)
-            setPwm(0, -rightspeed-1)
+            setPwm(0, 0)
+            setPwm(1, -rightspeed-1)
         }
         if (leftspeed >= 0)
         {
-            setPwm(3, leftspeed-1)
-            setPwm(2, 0)    
+            setPwm(2, leftspeed-1)
+            setPwm(3, 0)    
         }
         else
         {
-            setPwm(3, 0)
-            setPwm(2, -leftspeed-1)
+            setPwm(2, 0)
+            setPwm(3, -leftspeed-1)
         }
 
     }
@@ -274,13 +273,13 @@ namespace ChocoCar {
 
 
     export enum IR_sensor{
-        //% blockId=IR_Left2 block="左后"
+        //% blockId=IR_Left2 block="左2"
         Left2 = 0,
-        //% blockId=IR_Left1 block="左前"
+        //% blockId=IR_Left1 block="左1"
         Left1,
-        //% blockId=IR_Right1 block="右前"
+        //% blockId=IR_Right1 block="右1"
         Right1,
-        //% blockId=IR_Right2 block="右后"
+        //% blockId=IR_Right2 block="右2"
         Right2
 
     }
@@ -305,13 +304,17 @@ namespace ChocoCar {
             return false;
         }
     }
+    //% blockId=Choco_touch_event block="当检测到触摸输入时" weight=15 color="#3d85c6" icon="\uf2f6"
+    export function onTouch(body: () => void):void {
+
+    }
     //% blockId=Choco_IRsensor block="循线传感器 %n |检测到 %state"
     //% n.fieldEditor="gridpicker" n.fieldOptions.columns=4 color="#3d85c6" icon="\uf2f6"
     export function read_IRsensor(n: IR_sensor,state:IR_state): boolean{
         let pin = 0;
         switch (n) {
-            case IR_sensor.Left1: pin = DigitalPin.P12; break;
-            case IR_sensor.Left2: pin = DigitalPin.P2; break;
+            case IR_sensor.Left1: pin = DigitalPin.P2; break;
+            case IR_sensor.Left2: pin = DigitalPin.P12; break;
             case IR_sensor.Right1: pin = DigitalPin.P8; break;
             case IR_sensor.Right2: pin = DigitalPin.P1; break;
         }
@@ -349,6 +352,7 @@ namespace ChocoCar {
     //% v.min=1 v.max=5 
     //% brightness.min=1 brightness.max=5
     export function rainbowlight(v: number, brightness: number) {
+        let head: neopixel.Strip = null
         let RGB: neopixel.Strip = null
         turn_off = false
         RGB = neopixel.create(DigitalPin.P5, 12, NeoPixelMode.RGB)
@@ -356,17 +360,20 @@ namespace ChocoCar {
         RGB.showRainbow(1, 360)
         control.inBackground(() => {
             while (!turn_off) {
-                RGB.rotate(1)
-                RGB.show()
-                basic.pause(500 / v)
+                RGB.showRainbow(1, 360)
+                for (let index = 0; index <= 11; index++) {
+                    RGB.shift(1)
+                    RGB.show()
+                    head = RGB.range(0, index + 1)
+                    head.showRainbow(360 - 30 * index, 330)
+                    basic.pause(500 / v)
+                }
             }
             RGB.clear();
             RGB.show();
             basic.pause(100);
             pins.digitalReadPin(DigitalPin.P5)
             pins.setPull(DigitalPin.P5, PinPullMode.PullUp)
-            while (1)
-                basic.pause(60000);
 
         })
     }
@@ -374,25 +381,6 @@ namespace ChocoCar {
     //% weight=1 color="#6aa84f" icon="\uf0eb"
     export function turnoff_rainbowlight() {
         turn_off = true
-    }
-    export enum key{
-        A = 1,
-        B
-    }
-    /**
-     * 按键继续
-     */
-    //% blockId=press_to_continue block="按 %button 键继续" weight=7
-    //% color="#10c810"
-    export function press_to_continue(button: key) {
-        if(button == 1)    
-            while (!(input.buttonIsPressed(Button.A))) {
-        
-            }
-        else
-            while (!(input.buttonIsPressed(Button.B))) {
-
-            }
     }
 }
 
