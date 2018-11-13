@@ -1,12 +1,12 @@
 {
-    "name": "Chocobit",
+    "name": "Chocobit2.0",
     "version": "1.2.0",
     "dependencies": {
         "core": "*",
         "neopixel": "github:microsoft/pxt-neopixel#v0.6.10",
         "radio": "*"
     },
-    "description": "Chocobit智能车扩展包",
+    "description": "Chocobit智能车扩展包2.0",
     "files": [
         "README.md",
         "choco.ts"
