@@ -1,5 +1,4 @@
-//自定义扩展库模板
-//chocobit 2018/8/17
+//chocobit 2018/11/13
 //% color="#f97c04" weight=25 icon="\uf1b9"
 namespace ChocoCar {
 
@@ -273,13 +272,13 @@ namespace ChocoCar {
 
 
     export enum IR_sensor{
-        //% blockId=IR_Left2 block="左2"
+        //% blockId=IR_Left2 block="左后"
         Left2 = 0,
-        //% blockId=IR_Left1 block="左1"
+        //% blockId=IR_Left1 block="左前"
         Left1,
-        //% blockId=IR_Right1 block="右1"
+        //% blockId=IR_Right1 block="右前"
         Right1,
-        //% blockId=IR_Right2 block="右2"
+        //% blockId=IR_Right2 block="右后"
         Right2
 
     }
