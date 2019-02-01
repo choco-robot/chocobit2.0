@@ -273,9 +273,9 @@ namespace ChocoCar {
 
     export enum IR_sensor{
         //% blockId=IR_Left2 block="左后"
-        Left2 = 0,
+        Left1 = 0,
         //% blockId=IR_Left1 block="左前"
-        Left1,
+        Left2,
         //% blockId=IR_Right1 block="右前"
         Right1,
         //% blockId=IR_Right2 block="右后"
