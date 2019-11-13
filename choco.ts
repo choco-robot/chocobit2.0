@@ -23,6 +23,7 @@ namespace ChocoCar {
 
     let initialized = false
     let turn_off = false
+    let straight_correct = 1
     export enum enServo {
         //blockId=servo_s1 block="接口1"
         S1 = 1,
@@ -132,7 +133,8 @@ namespace ChocoCar {
     //% leftspeed.min=-100 lelftspeed.max=100
     //% rightspeed.min=-100 rightspeed.max=100
     export function move(leftspeed: number, rightspeed: number) {
-
+        leftspeed = leftspeed>100?100:leftspeed<-100?-100:leftspeed;
+        rightspeed = rightspeed>100?100:rightspeed<-100?-100:rightspeed;
         leftspeed =leftspeed*256/100*16
         rightspeed =rightspeed*256/100*16
         if (rightspeed >= 0)
@@ -179,8 +181,8 @@ namespace ChocoCar {
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=10
     export function CarCtrlSpeed(index: CarState, speed: number): void {
         switch (index) {
-            case CarState.Car_Run: move(speed, speed); break;
-            case CarState.Car_Back: move(-speed, -speed); break;
+            case CarState.Car_Run: move(speed*staright_correct, speed/staright_correct); break;
+            case CarState.Car_Back: move(-speed*staright_correct, -speed/staright_correct); break;
             case CarState.Car_Left: move(speed*3/5, speed); break;
             case CarState.Car_Right: move(speed, speed*3/5); break;
             case CarState.Car_Stop: move(0, 0); break;
@@ -189,6 +191,13 @@ namespace ChocoCar {
         }
     }
 
+    //% block="设置直行修正参数%correct|%"
+    //% correct.defl=100 correct.min=50 correct.max=150
+    //% weight=91
+    export function Set_straight_correct(correct:number){
+        staright_correct=correct/100;
+        return
+    }
     //% blockId=Choco_Servo block="舵机控制|编号 %num|角度 %value"
     //% weight=80
     //% advanced=true
@@ -381,118 +390,4 @@ namespace ChocoCar {
     export function turnoff_rainbowlight() {
         turn_off = true
     }
-}
-
-
-
-
-//% color="#f23c17" weight=20 icon="\uf085"
-namespace MUsensor {
-    export enum MODE {
-        //% blockId=MU_mode_face block="人脸"
-        FACE = 0,
-        //% blockId=MU_mode_ball block="球"
-        BALL,
-        //% blockId=MU_mode_line block="线"
-        LINE,
-        //% blockId=MU_mode_body block="人体"
-        BODY,
-        //% blockId=MU_mode_shape block="形状卡片"
-        SHAPE,
-        //% blockId=MU_mode_signal block="标志卡片"
-        SIGNAL,
-        //% blockId=MU_mode_moving block="移动物体"
-        MOVING,
-        //% blockId=MU_mode_moving block="特定人脸"
-        FACERCG,
-        //% blockId=MU_mode_color block="颜色"
-        COLOR
-
-    }
-    export enum DIR {
-        //%blockId=DIR_X block="X"
-        X = 0,
-        //%blockId=DIR_Y block="Y"
-        Y
-    }
-
-    //% blockId=MU_init block="初始化MU传感器"
-    //% weight=90
-    export function init() {
-
-        serial.writeLine("CMD+SENSOR_SETUP")
-        basic.pause(100)
-        serial.writeLine("CMD+UART_STATUS=ENABLE")
-        basic.pause(100)
-        serial.writeLine("CMD+UART_OUTPUT=CALLBACK")
-        basic.pause(100)
-        serial.writeLine("CMD+SENSOR_SAVE")
-        basic.pause(100)
-        serial.writeLine("CMD+SENSOR_EXIT")
-
-    }
-
-    //% blockId=MU_face_train block="录入人脸"
-    export function facetrain() {
-        serial.writeLine("CMD+SENSOR_SETUP")
-        basic.pause(100)
-        serial.writeLine("CMD+VISION_OPTION=FACETRAIN")
-        basic.pause(100)
-    }
-
-    //% blockId=MU_set_mode block="设置检测模式为 %mode"
-    //% mode.fieldEditor="gridpicker" mode.fieldOptions.columns=3
-    //% weight=85
-    export function setmode(mode: MODE): void {
-        serial.writeLine("CMD+SENSOR_SETUP")
-        basic.pause(100);
-        switch (mode) {
-            case 0: serial.writeLine("CMD+VISION_TYPE=FACE")
-            case 1: serial.writeLine("CMD+VISION_TYPE=BALL")
-            case 2: serial.writeLine("CMD+VISION_TYPE=LINE")
-            case 3: serial.writeLine("CMD+VISION_TYPE=BODY")
-            case 4: serial.writeLine("CMD+VISION_TYPE=SHAPE")
-            case 5: serial.writeLine("CMD+VISION_TYPE=SIGNAL")
-            case 6: serial.writeLine("CMD+VISION_TYPE=MOVING")
-            case 7: serial.writeLine("CMD+VISION_TYPE=FACERCG")
-            case 8: serial.writeLine("CMD+VISION_TYPE=COLOR")
-        }
-        basic.pause(100)
-        serial.writeLine("CMD+SENSOR_SAVE")
-        basic.pause(100)
-        serial.writeLine("CMD+SENSOR_EXIT")
-    }
-
-    //%blockId=MU_isdetected block="看到目标"
-    //%weight=80
-    export function isdetected(): boolean {
-        serial.writeLine("CMD+VISION_DETECT=RESULT")
-        basic.pause(100)
-        let result = serial.readUntil(String.fromCharCode(0xed))
-        if (result.charCodeAt(2) == 0)
-            return false
-        else return true
-    }
-
-    //%blockId=MU_detect_result block="检测结果 %dir|坐标"
-    //%help="如果检测到目标，返回目标物体的X,Y坐标，范围为0~100，否则返回-1"
-    //%weight=75
-    export function detect_result(dir: DIR): number {
-        serial.writeLine("CMD+VISION_DETECT=RESULT")
-        basic.pause(100)
-        let result = serial.readUntil(String.fromCharCode(0xed))
-        if (result.charCodeAt(2) == 0)
-            return -1
-        else {
-            if (dir == 0)
-                return result.charCodeAt(3)
-            else
-                return result.charCodeAt(4)
-        }
-
-    }
-
-    
-
-
 }
