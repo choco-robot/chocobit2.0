@@ -1,6 +1,6 @@
 {
     "name": "Chocobit2.0",
-    "version": "1.2.1",
+    "version": "1.2.4",
     "dependencies": {
         "core": "*",
         "neopixel": "github:microsoft/pxt-neopixel#v0.6.10",
