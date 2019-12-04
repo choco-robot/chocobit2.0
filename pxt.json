@@ -3,7 +3,7 @@
     "version": "1.2.5",
     "dependencies": {
         "core": "*",
-        "neopixel": "github:zjuxumang/pxt-neopixel#v0.6.10",
+        "neopixel": "github:zjuxumang/pxt-neopixel#v0.6.12",
         "radio": "*"
     },
     "description": "Chocobit智能车扩展包2.0",
