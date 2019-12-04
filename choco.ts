@@ -23,7 +23,7 @@ namespace ChocoCar {
 
     let initialized = false
     let turn_off = false
-    let straight_correct = 1
+    let straight_correct = 1.0
     export enum enServo {
         //blockId=servo_s1 block="接口1"
         S1 = 1,
@@ -181,8 +181,8 @@ namespace ChocoCar {
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=10
     export function CarCtrlSpeed(index: CarState, speed: number): void {
         switch (index) {
-            case CarState.Car_Run: move(speed*staright_correct, speed/staright_correct); break;
-            case CarState.Car_Back: move(-speed*staright_correct, -speed/staright_correct); break;
+            case CarState.Car_Run: move(speed*straight_correct, speed/straight_correct); break;
+            case CarState.Car_Back: move(-speed*straight_correct, -speed/straight_correct); break;
             case CarState.Car_Left: move(speed*3/5, speed); break;
             case CarState.Car_Right: move(speed, speed*3/5); break;
             case CarState.Car_Stop: move(0, 0); break;
@@ -195,7 +195,7 @@ namespace ChocoCar {
     //% correct.defl=100 correct.min=50 correct.max=150
     //% weight=91
     export function Set_straight_correct(correct:number){
-        staright_correct=correct/100;
+        straight_correct=correct/100;
         return
     }
     //% blockId=Choco_Servo block="舵机控制|编号 %num|角度 %value"
