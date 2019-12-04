@@ -312,10 +312,6 @@ namespace ChocoCar {
             return false;
         }
     }
-    //% blockId=Choco_touch_event block="当检测到触摸输入时" weight=15 color="#3d85c6" icon="\uf2f6"
-    export function onTouch(body: () => void):void {
-
-    }
     //% blockId=Choco_IRsensor block="循线传感器 %n |检测到 %state"
     //% n.fieldEditor="gridpicker" n.fieldOptions.columns=4 color="#3d85c6" icon="\uf2f6"
     export function read_IRsensor(n: IR_sensor,state:IR_state): boolean{
